@@ -36,8 +36,9 @@ export default function LoginForm() {
     setError("")
     startTransition(()=>{
       Login(values).then((data:any)=>{
-        setError(data.error)
-        setSuccess(data.success)
+         setError(data?.error)
+        setSuccess(data?.success)
+        console.log(data)
       })
 
     })
