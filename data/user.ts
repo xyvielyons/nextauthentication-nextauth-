@@ -17,6 +17,7 @@ export const getUserById = async(id:string) =>{
         const user = await db.user.findUnique({
             where:{id}
         })
+        return user
         
     } catch (error) {
         return null
