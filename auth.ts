@@ -12,22 +12,41 @@ export const {
   signIn,
   signOut
 } = NextAuth({
-  callbacks:{
-    // async signIn({user}){
-    //   console.log("userr",user)
-    //   const existingUser = await getUserById(user.id);
-    //   if(!existingUser || !existingUser.emailVerified){
-    //     return false
-    //   }
+  pages:{
+    signIn:"/auth/login",
+    error:"/auth/error"
+  },
+  events:{
+    async linkAccount({user}){
+      await db.user.update({
+        where:{id:user.id},
+        data:{emailVerified:new Date()}
 
-    //    return true
-    // },
+      })
+    }
+
+  },
+  callbacks:{
+    async signIn({user,account}){
+      //allow Oauth without email verification
+      if(account?.provider !== "credentials") return true
+       const existingUser = await getUserById(user.id);
+       //prevent sign in without email verification
+      if(!existingUser || !existingUser.emailVerified){
+        return false
+      }
+
+      //Add 2fa checj
+
+       return true
+    },
     // async signIn({ account, profile }) {
     //   if (account.provider === "google") {
     //     return profile.email_verified && profile.email.endsWith("@example.com")
     //   }
     //   return true // Do different verification for other providers that don't have `email_verified`
     // },
+
     async session({token,session}){
       if(session.user){
         session.user.customField = token.customField

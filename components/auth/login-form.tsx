@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { CardWrapper } from './card-wrapper'
 import { useForm } from 'react-hook-form'
+import { useSearchParams } from 'next/navigation'
 import {zodResolver} from "@hookform/resolvers/zod"
 import {
 Form,
@@ -20,6 +21,8 @@ import { FormSuccess } from '../form-success'
 import {Login} from "@/actions/login"
 import { useTransition } from 'react'
 export default function LoginForm() {
+  const searchParams = useSearchParams();
+  const urlError = searchParams.get("error") === "OAuthAccountNotLinked" ? "Email Already in use with different provider!" :""
   const [isPending,startTransition] = useTransition()
   const [error,setError] = useState<string | undefined>("")
   const [success,setSuccess] = useState<string | undefined>("")
@@ -98,7 +101,7 @@ export default function LoginForm() {
             />
 
           </div>
-          <FormError message={error}></FormError>
+          <FormError message={error || urlError}></FormError>
           <FormSuccess message={success}></FormSuccess>
           <Button type='submit' disabled={isPending} className='w-full'>Login</Button>
 
