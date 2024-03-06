@@ -8,7 +8,8 @@ export const PublicRoutes = [
 export const AuthRoutes = [
     "/auth/login",
     "/auth/register",
-    "/auth/error"
+    "/auth/error",
+    "/auth/reset"
 ]
 //The prefix for api authentication routes
 //Routes that start with this prefix are used for api authentication purposes
