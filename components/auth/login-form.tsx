@@ -22,6 +22,7 @@ import {Login} from "@/actions/login"
 import { useTransition } from 'react'
 import Link from 'next/link'
 export default function LoginForm() {
+  const [showTwoFactor,setShowTwoFactor] = useState(false)
   const searchParams = useSearchParams();
   const urlError = searchParams.get("error") === "OAuthAccountNotLinked" ? "Email Already in use with different provider!" :""
   const [isPending,startTransition] = useTransition()
@@ -42,7 +43,20 @@ export default function LoginForm() {
          setError(data?.error)
         setSuccess(data?.success)
         console.log(data)
-      })
+        if(data?.error){
+          form.reset();
+          setError(data.error)
+        }
+        if(data?.success){
+          form.reset();
+          setSuccess(data.success)
+        }
+
+        if(data?.twoFactor){
+          setShowTwoFactor(true)
+        }
+      }).catch(()=>setError("Something went wrong"))
+
 
     })
   
@@ -61,6 +75,30 @@ export default function LoginForm() {
         className='space-y-6'
         >
           <div className='space-y-4'>
+            {showTwoFactor && <>
+            <FormField
+            control={form.control}
+            name="code"
+            render={({field})=>(
+              <FormItem>
+                <FormLabel>Two Factor Code</FormLabel>
+                <FormControl>
+                  <Input
+                  {...field}
+                  placeholder='123456'
+                  disabled={isPending}
+                  ></Input>
+                </FormControl>
+                
+                <FormMessage/>
+
+              </FormItem>
+            )}
+            />
+            </>
+            }
+          {!showTwoFactor &&
+            <>
             <FormField
             control={form.control}
             name="email"
@@ -109,11 +147,13 @@ export default function LoginForm() {
               </FormItem>
             )}
             />
+</>
+}
 
           </div>
           <FormError message={error || urlError}></FormError>
           <FormSuccess message={success}></FormSuccess>
-          <Button type='submit' disabled={isPending} className='w-full'>Login</Button>
+          <Button type='submit' disabled={isPending} className='w-full'>{showTwoFactor ? "Confirm":"Login"}</Button>
 
         </form>
       </Form>

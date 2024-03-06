@@ -1,7 +1,13 @@
 import React from 'react'
-
-export default function Loader() {
+import { ClimbingBoxLoader } from 'react-spinners'
+export default function Loading() {
   return (
-    <div>Loader...</div>
+    <>
+    <ClimbingBoxLoader
+  color="#36d7b7"
+  cssOverride={{}}
+/>
+  </>
   )
 }
+
