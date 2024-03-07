@@ -43,7 +43,7 @@ const form = useForm<z.infer<typeof SettingsSchema>>({
     password:undefined,
     newPassword:undefined,
     role:user?.role || undefined,
-    isTwoFactorEnabled:user?.isTwoFactorEnabled || undefined
+    isTwoFactorEnabled:user?.isTwoFactorEnabled as boolean  || undefined
   }
 })
 const {update} = useSession()
