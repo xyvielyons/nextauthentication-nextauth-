@@ -10,7 +10,7 @@ import bcrypt from "bcryptjs"
 
 
 export const settings =async (values: z.infer<typeof SettingsSchema>)=>{
-const user = await currentUser();
+const user:any = await currentUser() ;
 
 if(!user){
     return{error:"Unauthorized"}
